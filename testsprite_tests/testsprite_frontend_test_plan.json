@@ -1,0 +1,855 @@
+[
+  {
+    "id": "TC001",
+    "title": "Register as client and enter client home",
+    "description": "Verifies a new user can register as a client and is routed to the client entry screen after successful registration.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Select the client role"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid name into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a unique email into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid password into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the client entry point"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the quick request experience is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Register as provider and enter provider home",
+    "description": "Verifies a new user can register as a provider and is routed to the provider entry screen after successful registration.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Select the provider role"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid name into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a unique email into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid password into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the provider entry point"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the provider map experience is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Client login routes to quick request",
+    "description": "Verifies an existing client can log in and is routed to the client entry point.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the client entry point"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the quick request experience is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Create a quick request and see nearby providers",
+    "description": "Verifies a client can create a service request from the quick request screen and then sees nearby providers displayed.",
+    "category": "Service Radar (Quick Request)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Select a service category"
+      },
+      {
+        "type": "action",
+        "description": "Provide all required request details with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Submit the service request"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify nearby providers are displayed on the map"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Provider goes online and accepts a request",
+    "description": "Verifies a provider can toggle online, view request markers, inspect request details, accept a request, and see booking confirmation.",
+    "category": "Provider Acceptance (Provider Map)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Toggle online status to available"
+      },
+      {
+        "type": "action",
+        "description": "Wait for request markers to appear on the map"
+      },
+      {
+        "type": "action",
+        "description": "Open a request marker to inspect its details"
+      },
+      {
+        "type": "action",
+        "description": "Accept the client request"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a booking confirmation is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Choose cash payment and confirm booking marked paid",
+    "description": "Verifies that a client can select cash as the payment method from tracking and see a payment confirmation with the booking marked as paid.",
+    "category": "Payments",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "action",
+        "description": "Select cash as the payment method"
+      },
+      {
+        "type": "action",
+        "description": "Submit the selected payment method"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a payment confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is shown as paid"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Send a chat message from an active tracking session",
+    "description": "Verifies that a client can open an active booking in tracking, send a chat message, and see it appear in the conversation.",
+    "category": "Real-time Tracking and Chat",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a new chat message with a unique value into the message field"
+      },
+      {
+        "type": "action",
+        "description": "Send the chat message"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the sent chat message appears in the conversation thread"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Choose card payment and complete in-app payment details submission",
+    "description": "Verifies that a client can select card as the payment method in tracking, enter required payment details, submit, and see the booking marked as paid.",
+    "category": "Payments",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "action",
+        "description": "Select card as the payment method"
+      },
+      {
+        "type": "action",
+        "description": "Fill valid payment details into the card payment form"
+      },
+      {
+        "type": "action",
+        "description": "Submit the payment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a payment confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is shown as paid"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "View provider location and booking details on tracking map",
+    "description": "Verifies that the tracking screen shows an active booking summary and displays the provider location on the map.",
+    "category": "Real-time Tracking and Chat",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify active booking details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the provider location is displayed on the map"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Provider offline state prevents new request markers",
+    "description": "Verifies a provider who is unavailable does not receive new incoming request markers on the map.",
+    "category": "Provider Acceptance (Provider Map)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Toggle online status to unavailable"
+      },
+      {
+        "type": "action",
+        "description": "Wait for a short period while staying on the provider map screen"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no new request markers appear while unavailable"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Observe location updates during tracking session",
+    "description": "Verifies that provider location updates are reflected on the tracking map over time during an active session.",
+    "category": "Real-time Tracking and Chat",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "action",
+        "description": "Wait for provider location to update on the map"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the provider location changes on the map during the session"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "View platform statistics on admin dashboard",
+    "description": "Verifies that an administrator can access the admin dashboard and see platform statistics and summaries displayed.",
+    "category": "Admin Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open the admin dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify platform statistics and summary metrics are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC013",
+    "title": "Verify a provider profile from the provider list",
+    "description": "Verifies that an administrator can open the provider list, verify a provider profile, and see the verification status updated.",
+    "category": "Admin Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open the admin dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Click to open the provider list"
+      },
+      {
+        "type": "action",
+        "description": "Select a provider from the list"
+      },
+      {
+        "type": "action",
+        "description": "Set the provider verification status to verified"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected provider is shown as verified in the provider details or list"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC014",
+    "title": "Open chat thread from tracking and keep messages visible after leaving chat area",
+    "description": "Verifies that messages in the tracking chat remain visible within the same session after navigating within the tracking screen.",
+    "category": "Real-time Tracking and Chat",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a new chat message with a unique value into the message field"
+      },
+      {
+        "type": "action",
+        "description": "Send the chat message"
+      },
+      {
+        "type": "action",
+        "description": "Scroll the tracking screen away from the chat area"
+      },
+      {
+        "type": "action",
+        "description": "Scroll back to the chat area"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the conversation thread still displays the previously sent message"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC015",
+    "title": "Quick request required field validation",
+    "description": "Verifies the quick request form blocks submission when a required field is empty and shows a validation error.",
+    "category": "Service Radar (Quick Request)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Select a service category"
+      },
+      {
+        "type": "action",
+        "description": "Leave at least one required request detail field empty"
+      },
+      {
+        "type": "action",
+        "description": "Submit the service request"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a form validation error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the request is not submitted and the user remains in the quick request flow"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC016",
+    "title": "Unverify a provider profile from the provider list",
+    "description": "Verifies that an administrator can unverify a previously verified provider profile and see the verification status updated.",
+    "category": "Admin Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open the admin dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Click to open the provider list"
+      },
+      {
+        "type": "action",
+        "description": "Select a provider currently shown as verified"
+      },
+      {
+        "type": "action",
+        "description": "Set the provider verification status to unverified"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected provider is shown as unverified in the provider details or list"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC017",
+    "title": "Block payment submission when no payment method is selected",
+    "description": "Verifies that the tracking payment UI requires choosing a payment method before submission and shows a validation error otherwise.",
+    "category": "Payments",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to submit payment without selecting a payment method"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a payment method validation error is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC018",
+    "title": "Open service catalog management from admin dashboard",
+    "description": "Verifies that an administrator can navigate from the admin dashboard to the service catalog management area and see the catalog UI.",
+    "category": "Admin Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open the admin dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Click to open service catalog management"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the service catalog management view is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Prevent sending an empty chat message",
+    "description": "Verifies that the tracking chat input enforces non-empty messages and does not add a new message when submitted empty.",
+    "category": "Real-time Tracking and Chat",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "action",
+        "description": "Fill in an empty value into the message field"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to send the chat message"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a chat input validation error is visible"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC020",
+    "title": "Switch payment method selection before confirming",
+    "description": "Verifies that a client can change the selected payment method on tracking before submission and the UI reflects the latest selection.",
+    "category": "Payments",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click to open tracking for the active booking"
+      },
+      {
+        "type": "action",
+        "description": "Select card as the payment method"
+      },
+      {
+        "type": "action",
+        "description": "Select cash as the payment method"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cash is shown as the currently selected payment method"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC021",
+    "title": "Invalid login is blocked with validation",
+    "description": "Verifies a user cannot log in with missing or invalid credentials and remains on the login screen with a visible validation error.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with invalid@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with wrong-password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a login validation error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the login screen"
+      }
+    ],
+    "priority": "Low"
+  }
+]

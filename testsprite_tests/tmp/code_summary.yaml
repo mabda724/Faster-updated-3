@@ -1,0 +1,87 @@
+version: "2"
+type: frontend
+tech_stack:
+  - Dart
+  - Flutter
+  - Supabase
+  - Paymob Native SDK
+  - Flutter Map
+routes:
+  - path: /
+    file: lib/main.dart
+    auth_required: false
+    description: App entry point and initialization
+  - path: /login
+    file: lib/features/auth/presentation/login_screen.dart
+    auth_required: false
+    description: User authentication screen
+  - path: /register
+    file: lib/features/auth/presentation/register_screen.dart
+    auth_required: false
+    description: Account creation for client and provider roles
+  - path: /provider_map
+    file: lib/features/provider/presentation/provider_requests_map_screen.dart
+    auth_required: true
+    description: Real-time map for providers to accept nearby requests
+  - path: /quick_request
+    file: lib/features/booking/presentation/quick_request_screen.dart
+    auth_required: true
+    description: Radar-style service request creation for clients
+  - path: /admin_dashboard
+    file: lib/features/admin/presentation/admin_dashboard_screen.dart
+    auth_required: true
+    description: Administrative management and statistics
+  - path: /tracking
+    file: lib/features/booking/presentation/tracking_screen.dart
+    auth_required: true
+    description: Real-time provider tracking and chat
+features:
+  - name: Service Radar
+    description: Client searches for nearby providers using a radar interface
+    files:
+      - lib/features/booking/presentation/quick_request_screen.dart
+    entry_route: /quick_request
+    user_interactions:
+      - Select service category
+      - Click "Request Now"
+      - View nearby providers on map
+    api_calls:
+      - method: INSERT
+        endpoint: service_requests
+    auth_required: true
+  - name: Provider Acceptance
+    description: Provider views and accepts nearby client requests on a map
+    files:
+      - lib/features/provider/presentation/provider_requests_map_screen.dart
+    entry_route: /provider_map
+    user_interactions:
+      - Toggle online status
+      - View markers on map
+      - Tap marker to see details
+      - Click "Accept Request"
+    api_calls:
+      - method: UPDATE
+        endpoint: service_requests
+      - method: INSERT
+        endpoint: bookings
+    auth_required: true
+  - name: Admin Management
+    description: Admin manages services, categories, and provider verification
+    files:
+      - lib/features/admin/presentation/admin_dashboard_screen.dart
+      - lib/features/admin/presentation/admin_providers_screen.dart
+    entry_route: /admin_dashboard
+    user_interactions:
+      - View statistics
+      - Verify/unverify providers
+      - Manage service catalog
+    api_calls:
+      - method: SELECT
+        endpoint: profiles
+      - method: UPDATE
+        endpoint: provider_profiles
+    auth_required: true
+known_limitations:
+  - issue: Paymob integration might return 404 if Integration ID is incorrect
+    location: lib/config/paymob_config.dart
+    impact: Electronic payments will fail, fallback to cash required

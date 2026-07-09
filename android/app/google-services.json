@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "457275280899",
+    "firebase_url": "https://faster-5d279-default-rtdb.firebaseio.com",
+    "project_id": "faster-5d279",
+    "storage_bucket": "faster-5d279.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457275280899:android:ee4b2dabdb5d5a0115c836",
+        "android_client_info": {
+          "package_name": "com.faster.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADAMw_7i70ShVb2DW-yImOAvoTlV74U74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

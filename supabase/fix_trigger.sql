@@ -1,0 +1,14 @@
+CREATE OR REPLACE FUNCTION auto_create_referral()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  BEGIN
+    INSERT INTO referral_codes (user_id) VALUES (NEW.id);
+  EXCEPTION WHEN OTHERS THEN
+  END;
+  BEGIN
+    INSERT INTO user_points (user_id) VALUES (NEW.id);
+  EXCEPTION WHEN OTHERS THEN
+  END;
+  RETURN NEW;
+END;
+$$;

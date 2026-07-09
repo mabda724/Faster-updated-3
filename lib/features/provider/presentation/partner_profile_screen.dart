@@ -1,0 +1,374 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show IconData;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/design_tokens.dart';
+import '../../../core/services/supabase_service.dart';
+import '../../../core/constants/roles.dart';
+import 'partner_document_upload_screen.dart';
+
+class PartnerProfileScreen extends StatefulWidget {
+  const PartnerProfileScreen({super.key});
+
+  @override
+  State<PartnerProfileScreen> createState() => _PartnerProfileScreenState();
+}
+
+class _PartnerProfileScreenState extends State<PartnerProfileScreen> {
+  Map<String, dynamic>? _profile;
+  Map<String, dynamic>? _partnerProfile;
+  Map<String, dynamic>? _category;
+  bool _isLoading = true;
+  int _daysSinceRegistration = 0;
+  bool _isBanned = false;
+  String? _banReason;
+  String? _role;
+
+  bool get _isProvider => _role == 'provider';
+  bool get _isSeller => _role == 'seller';
+  bool get _isDriver => _role == 'driver';
+  bool get _isDelivery => _role == 'delivery';
+
+  bool get _isDocumentIncomplete {
+    if (_partnerProfile == null) return false;
+    final status = _partnerProfile!['document_verification_status'] ?? 'pending';
+    return status != 'approved';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final uid = SupabaseService.currentUserId;
+    if (uid == null) return;
+    try {
+      final profile = await SupabaseService.db
+          .from('profiles')
+          .select('role, full_name, email, phone, avatar_url, banned_at, ban_reason')
+          .eq('id', uid)
+          .single();
+      _role = profile['role']?.toString();
+      _profile = profile;
+      _isBanned = profile['banned_at'] != null;
+      _banReason = profile['ban_reason'];
+
+      final partnerProfile = await SupabaseService.db
+          .from('provider_profiles')
+          .select('*, categories(name_ar)')
+          .eq('id', uid)
+          .maybeSingle();
+      _partnerProfile = partnerProfile;
+
+      if (partnerProfile != null) {
+        if (partnerProfile['categories'] != null) {
+          _category = partnerProfile['categories'];
+        }
+        final createdAtStr = partnerProfile['created_at']?.toString();
+        if (createdAtStr != null) {
+          try {
+            final regDate = DateTime.parse(createdAtStr);
+            _daysSinceRegistration = DateTime.now().difference(regDate).inDays;
+          } catch (e) {
+            debugPrint('Error parsing registration date: $e');
+          }
+        }
+      }
+
+      if (mounted) setState(() => _isLoading = false);
+    } catch (e) {
+      debugPrint('Error loading profile: $e');
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _navigateToDocumentUpload() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const PartnerDocumentUploadScreen()),
+    );
+    _load(); // Refresh status
+  }
+
+  Future<void> _toggleOnlineStatus() async {
+    if (_partnerProfile == null) return;
+    try {
+      final uid = SupabaseService.currentUserId;
+      if (uid == null) return;
+      await SupabaseService.db
+          .from('provider_profiles')
+          .update({'is_online': !(_partnerProfile!['is_online'] ?? false)})
+          .eq('id', uid);
+      await _load();
+    } catch (e) {
+      debugPrint('Error toggling online: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(backgroundColor: AppTheme.backgroundColor, body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final roleLabel = _role != null ? RoleExtension.fromString(_role).label : 'الحساب';
+
+    return Scaffold(backgroundColor: AppTheme.backgroundColor, body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Container(
+                    width: 60.r,
+                    height: 60.r,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                      image: _profile?['avatar_url'] != null
+                          ? DecorationImage(
+                              image: NetworkImage(_profile!['avatar_url']),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                    ),
+                    child: _profile?['avatar_url'] == null
+                        ? Icon(Icons.person_rounded, size: 30, color: AppTheme.primaryColor)
+                        : null,
+                  ),
+                  SizedBox(width: DesignTokens.space6),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _profile?['full_name'] ?? '',
+                          style: TextStyle(
+                            fontSize: DesignTokens.textTitleLarge,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(roleLabel, style: TextStyle(color: AppTheme.textSecondary)),
+                        if (_isProvider && _category != null)
+                          Text(
+                            _category!['name_ar'] ?? '',
+                            style: TextStyle(color: AppTheme.primaryColor, fontSize: 12),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: DesignTokens.space6),
+
+              // Stats Card (if partner)
+              if (_partnerProfile != null)
+                Container(
+                  padding: EdgeInsets.all(DesignTokens.space6),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceColor,
+                    borderRadius: DesignTokens.brLg,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.5),
+                        blurRadius: 8,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _statItem('التقييم', (_partnerProfile!['rating'] ?? 0).toStringAsFixed(1), Icons.star_rounded),
+                      _statItem('الرصيد', '${_partnerProfile!['wallet_balance'] ?? 0} ج.م', Icons.attach_money_rounded),
+                      if (_isProvider) _statItem('الطلبات', '${_partnerProfile!['total_bookings'] ?? 0}', Icons.description_rounded),
+                    ],
+                  ),
+                ),
+              SizedBox(height: DesignTokens.space6),
+
+              // Provider-specific: Category
+              if (_isProvider && _category != null)
+                _infoCard(
+                  icon: Icons.grid_view_rounded,
+                  iconColor: AppTheme.primaryColor,
+                  title: 'التخصص',
+                  subtitle: _category!['name_ar'] ?? '',
+                ),
+
+              // Seller-specific: Store info
+              if (_isSeller && _partnerProfile != null)
+                Container(
+                  margin: const EdgeInsets.only(bottom: DesignTokens.space4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: DesignTokens.brLg,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_partnerProfile!['description'] != null)
+                        ListTile(
+                          title: const Text('وصف المتجر'),
+                          subtitle: Text(_partnerProfile!['description']),
+                        ),
+                      if (_partnerProfile!['business_hours'] != null)
+                        ListTile(
+                          title: const Text('ساعات العمل'),
+                          subtitle: Text(_partnerProfile!['business_hours']),
+                        ),
+                      if (_partnerProfile!['address'] != null)
+                        ListTile(
+                          title: const Text('العنوان'),
+                          subtitle: Text(_partnerProfile!['address']),
+                        ),
+                    ],
+                  ),
+                ),
+
+              // Document verification status (for all partners)
+              if (_isProvider || _isSeller || _isDriver || _isDelivery)
+                Container(
+                  margin: const EdgeInsets.only(bottom: DesignTokens.space4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: DesignTokens.brLg,
+                  ),
+                  padding: const EdgeInsets.all(DesignTokens.space6),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.shield_rounded,
+                        color: _isDocumentIncomplete ? AppTheme.tertiaryColor : AppTheme.successColor,
+                        size: DesignTokens.iconLg,
+                      ),
+                      const SizedBox(width: DesignTokens.space4),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _isDocumentIncomplete ? 'التحقق قيد المراجعة' : 'تم التحقق',
+                              style: const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              _isDocumentIncomplete ? 'يرجى رفع الوثائق للمصادقة' : 'حسابك مصادق عليه',
+                              style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (_isDocumentIncomplete)
+                        ElevatedButton(
+                          onPressed: _navigateToDocumentUpload,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: DesignTokens.space4, vertical: DesignTokens.space2),
+                          ),
+                          child: const Text('رفع الوثائق', style: TextStyle(fontSize: 12)),
+                        ),
+                    ],
+                  ),
+                ),
+
+              // Banned warning
+              if (_isBanned)
+                Container(
+                  margin: const EdgeInsets.only(bottom: DesignTokens.space4),
+                  padding: const EdgeInsets.all(DesignTokens.space6),
+                  decoration: BoxDecoration(
+                    color: AppTheme.errorColor.withValues(alpha: 0.1),
+                    borderRadius: DesignTokens.brLg,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.block_rounded, color: AppTheme.errorColor),
+                      const SizedBox(width: DesignTokens.space4),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'الحساب مقيد',
+                              style: TextStyle(color: AppTheme.errorColor, fontWeight: FontWeight.w600),
+                            ),
+                            Text(_banReason ?? 'تم تقييد حسابك'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              // Contact info
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: DesignTokens.brLg,
+                ),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    ListTile(
+                      title: const Text('البريد الإلكتروني'),
+                      subtitle: Text(_profile?['email'] ?? 'غير محدد'),
+                    ),
+                    ListTile(
+                      title: const Text('رقم الهاتف'),
+                      subtitle: Text(_profile?['phone'] ?? 'غير محدد'),
+                    ),
+                    ListTile(
+                      title: const Text('تاريخ التسجيل'),
+                      subtitle: Text('$_daysSinceRegistration يوم'),
+                    ),
+],
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
+  Widget _infoCard({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: DesignTokens.space4),
+      padding: const EdgeInsets.all(DesignTokens.space6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: DesignTokens.brLg,
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor),
+          const SizedBox(width: DesignTokens.space4),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+                Text(subtitle, style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _statItem(String label, String value, IconData icon) {
+    return Column(
+      children: [
+        Icon(icon, color: AppTheme.primaryColor, size: DesignTokens.iconLg),
+        SizedBox(height: DesignTokens.space2),
+        Text(value, style: TextStyle(fontWeight: FontWeight.w600, fontSize: DesignTokens.textBodyLarge)),
+        Text(label, style: TextStyle(color: AppTheme.textSecondary, fontSize: DesignTokens.textLabelSmall)),
+      ],
+    );
+  }
+}
