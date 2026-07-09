@@ -169,7 +169,7 @@ faster_app/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/mabda724/Faster.git
+git clone https://github.com/mabda724/Faster-updated-3.git
 cd Faster
 
 # 2. Switch to updated branch
@@ -199,8 +199,8 @@ flutter build apk --debug    # Android APK
 أنشئ ملف `assets/.env` بالمحتوى التالي:
 
 ```env
-SUPABASE_URL=https://xoxnjnhqpqkkctkvxzzy.supabase.co
-SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
 ---
